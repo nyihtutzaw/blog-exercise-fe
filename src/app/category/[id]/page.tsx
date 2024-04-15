@@ -1,6 +1,6 @@
 
 import { getPosts } from "@/actions";
-import { BlogContent } from "@/app/blogContent";
+import { PostContent } from "@/app/postContent";
 
 
 type Prop = {
@@ -13,10 +13,10 @@ export default async function CategoryDetail({ params,searchParams }: Prop) {
     const { page = 1 } = searchParams;
     const { id } = params;
 
-    const data = await getPosts({ categoryId: parseInt(id) });
+    const data = await getPosts({ categoryId: parseInt(id),page:page });
 
     return (
-        <BlogContent data={data} currentPage={page}/>
+        <PostContent data={data} currentPage={page}/>
 
     );
 }

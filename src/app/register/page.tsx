@@ -5,29 +5,28 @@ import { object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormItem } from '@/components/FormItem';
 import Image from 'next/image';
-import { ErrorContainer } from '@/components/ErrorContainer';
-import { LoginFormData } from '@/types';
-import { TextBox } from '@/components';
-import { useLogin } from './useLogin';
+import { RegisterFormData } from '@/types';
+import { Button, ErrorContainer, TextBox } from '@/components';
 import Link from 'next/link';
+import { useRegister } from './useRegister';
 
 
 const schema = object().shape({
+    name: string().required('Name is required'),
     email: string().required('Email is required'),
     password: string().required('Password is required'),
 });
 
 
 export default function RegisterPage() {
-
-    const { error, login } = useLogin();
-    const { handleSubmit, control, formState: { errors } } = useForm<LoginFormData>({
+    const { error, register, loading } = useRegister();
+    const { handleSubmit, control, formState: { errors } } = useForm<RegisterFormData>({
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = useCallback(async (data: LoginFormData) => {
-        await login(data.email, data.password);
-    }, [login]);
+    const onSubmit = useCallback(async (data: RegisterFormData) => {
+        await register(data);
+    }, [register]);
 
     return (
         <div className="min-h-screen flex items-start justify-center">
@@ -45,15 +44,15 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FormItem label="Name" className="mb-4">
                         <Controller
-                            name="email"
+                            name="name"
                             control={control}
                             render={({ field }) => (
                                 <TextBox
                                     {...field}
-                                    placeholder="Enter your email"
-                                    type="email"
-                                    error={errors.email}
-                                    errorMessage={errors.email?.message}
+                                    placeholder="Enter your name"
+                                    type="name"
+                                    error={errors.name}
+                                    errorMessage={errors.name?.message}
                                 />
                             )}
                         />
@@ -89,10 +88,8 @@ export default function RegisterPage() {
                         />
                     </FormItem>
                     <div className="mb-4">
-                        <button
-                            type="submit"
-                            className="w-full flex items-center justify-center bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-primary hover:text-secondary focus:outline-none"
-                        >Register</button>
+                        <Button type="submit"
+                            className="w-full flex items-center justify-center bg-primary text-white py-2 px-4 rounded-md hover:bg-primary hover:text-secondary focus:outline-none" loading={loading}>Register</Button>
                     </div>
                     <div className='py-4 text-center'>
                         <Link href='/login' className='text-primary underline'>{`If you have account, click here to login`}</Link>

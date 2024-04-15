@@ -1,5 +1,5 @@
 import { getAuthors } from "@/actions";
-import { AuthorItem } from "@/components";
+import { AuthorItem } from "@/components/AuthorItem";
 
 
 export default async function BlogDetail() {

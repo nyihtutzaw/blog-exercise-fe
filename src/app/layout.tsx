@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ReactNode } from 'react';
+import { getServerSession } from 'next-auth';
 import { DefaultLayout } from '@/layouts/default';
 import { getCategories } from '@/actions';
-
+import SessionProvider from '@/layouts/SessionProvider';
 
 
 export const metadata: Metadata = {
@@ -15,11 +16,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
     const categories = await getCategories();
- 
+    const session = await getServerSession();
     return (
         <html lang="en">
             <body className={`${true ? 'sidebar-open' : ''}`}>
-                <DefaultLayout categories={categories}>{children}</DefaultLayout>
+                <SessionProvider session={session}>
+                    <DefaultLayout categories={categories}>{children}</DefaultLayout>
+                </SessionProvider>
             </body>
         </html>
     );
