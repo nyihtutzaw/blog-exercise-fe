@@ -1,3 +1,5 @@
+
+
 import React, { FC } from 'react';
 
 type Prop = {
@@ -8,7 +10,7 @@ type Prop = {
 
 export const Pagination: FC<Prop> = ({ currentPage, totalPages, onPageChange }) => {
 
-    if (totalPages < 2) {
+    if (totalPages<2) {
         return <></>
     }
 
@@ -19,9 +21,9 @@ export const Pagination: FC<Prop> = ({ currentPage, totalPages, onPageChange }) 
                     const pageNumber: number = index + 1;
                     return (
                         <li
-                            onClick={() => onPageChange(index)}
+                            onClick={() => onPageChange(pageNumber)}
                             key={index}
-                            className={`text-white py-2 px-3 ${index === parseInt(currentPage.toString()) ? "bg-primary" : "bg-gray-500"}`}
+                            className={`text-white py-2 px-3 ${pageNumber === parseInt(currentPage.toString()) ? "bg-primary" : "bg-gray-500"}`}
                         >
                             <button
                             >

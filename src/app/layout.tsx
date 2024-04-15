@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ReactNode } from 'react';
 import { DefaultLayout } from '@/layouts/default';
-import { Category } from '@/types';
+import { getCategories } from '@/actions';
 
 
 
@@ -14,19 +14,8 @@ export const metadata: Metadata = {
 
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-
-    async function getCategories(): Promise<Category[]> {
-
-        const res = await fetch('http://localhost:5001/v1/categories');
-        if (!res.ok) {
-            throw new Error(`API request failed with status ${res.status}`);
-        }
-        const responseJson=await res.json();
-        return responseJson.data;
-    }
-
     const categories = await getCategories();
-
+ 
     return (
         <html lang="en">
             <body className={`${true ? 'sidebar-open' : ''}`}>
