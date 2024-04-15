@@ -1,16 +1,24 @@
-import React from 'react';
-// Assuming you're using Lucide icons (optional)
+'use client';
+
+import React, { useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Category } from '@/types';
+import { useParams, usePathname } from 'next/navigation';
 
 interface SidebarProps {
     isOpen: boolean;
     toggleSidebar: () => void;
-    categories:Category[];
+    categories: Category[];
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories,toggleSidebar }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories, toggleSidebar }) => {
+    const pathname=usePathname();
+    const { id='0' }=useParams();
+    const isActive=useCallback((categoryId:number)=>{
+        return pathname.includes("/category") && parseInt(id as string)===categoryId;
+    },[id, pathname])
+
     return (
         <div
             className={`fixed z-50 top-0 left-0 w-64 h-screen bg-white border-r border-gray-200 transition duration-200 ease-in-out ${isOpen ? '' : '-translate-x-full'
@@ -38,16 +46,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories,toggleSideb
                 </div>
                 <ul className="bg-white  overflow-y-auto py-2">
                     {
-                        categories.map((category)=>(
-                            <li key={category.id}  className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                        categories.slice(0, 10).map((category) => (
+                            <Link href={`/category/${category.id}`} key={category.id}><li className={`px-4 ${isActive(category.id)?'bg-primary text-white':'bg-white text-black'} hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer`}>
                                 {category.name}
-                            <span className="inline-flex items-center px-2 py-1 bg-primary hover:bg-white text-white rounded-full text-xs font-bold">
-                                {category._count?.posts}
-                            </span>
-                        </li>
+                                <span className="inline-flex items-center px-2 py-1 bg-primary hover:bg-white text-white rounded-full text-xs font-bold">
+                                    {category._count?.posts}
+                                </span>
+                            </li></Link>
                         ))
                     }
-            
+
                 </ul>
             </div>
             <div className='py-4 px-2'>
@@ -57,9 +65,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories,toggleSideb
                 <ul className="bg-white  overflow-y-auto py-2">
                     <Link href='/register'><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
                         Register / Login
-                    </li></Link>
-                    <Link href='/create-post'> <li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
-                        Create Post
                     </li></Link>
                 </ul>
             </div>
