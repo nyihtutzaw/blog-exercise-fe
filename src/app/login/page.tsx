@@ -7,7 +7,7 @@ import { FormItem } from '@/components/FormItem';
 import Image from 'next/image';
 import { ErrorContainer } from '@/components/ErrorContainer';
 import { LoginFormData } from '@/types';
-import { TextBox } from '@/components';
+import { Button, TextBox } from '@/components';
 import { useLogin } from './useLogin';
 import Link from 'next/link';
 
@@ -20,7 +20,7 @@ const schema = object().shape({
 
 export default function LoginPage() {
 
-    const { error, login } = useLogin();
+    const { error, login,loading } = useLogin();
     const { handleSubmit, control, formState: { errors } } = useForm<LoginFormData>({
         resolver: yupResolver(schema),
     });
@@ -43,7 +43,7 @@ export default function LoginPage() {
                 <h4 className="text-2xl font-semibold text-center mb-8">Login</h4>
                 <ErrorContainer error={error} />
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <FormItem label="Name" className="mb-4">
+                    <FormItem label="Email" className="mb-4">
                         <Controller
                             name="email"
                             control={control}
@@ -74,13 +74,11 @@ export default function LoginPage() {
                         />
                     </FormItem>
                     <div className="mb-4">
-                        <button
-                            type="submit"
-                            className="w-full flex items-center justify-center bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-primary hover:text-secondary focus:outline-none"
-                        >Login</button>
+                        <Button type="submit"
+                            className="w-full flex items-center justify-center bg-primary text-white py-2 px-4 rounded-md hover:bg-primary hover:text-secondary focus:outline-none" loading={loading}>Login</Button>
                     </div>
                     <div className='py-4 text-center'>
-                    <Link href='/register' className='text-primary underline'>{`If you don't have account, click here to create`}</Link>
+                        <Link href='/register' className='text-primary underline'>{`If you don't have account, click here to create`}</Link>
                     </div>
                 </form>
             </div>

@@ -10,10 +10,12 @@ type Props = {
     currentPage:number;
 }
 
-export const BlogContent: FC<Props> = ({ data,currentPage }) => {
+export const PostContent: FC<Props> = ({ data,currentPage }) => {
 
     const router=useRouter();
     const pathname=usePathname();
+
+   
 
     return (
         <div className="pb-4">

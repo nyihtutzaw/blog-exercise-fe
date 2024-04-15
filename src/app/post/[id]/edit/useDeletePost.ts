@@ -1,8 +1,7 @@
 
 import { useReducer } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-
+import { deletePost as deletePostService } from '@/actions';
 
 
 interface State {
@@ -40,45 +39,30 @@ const reducer = (state: State, action: Action): State => {
 };
 
 
-interface UseLoginReturnType extends State {
-    login: (name: string, password: string) => Promise<boolean>;
+interface UseDeletePostReturnType extends State {
+    deletePost: (id:number) => Promise<boolean>;
 }
 
-export const useLogin = (): UseLoginReturnType => {
+export const useDeletePost = (): UseDeletePostReturnType => {
     const router = useRouter();
     const [state, dispatch] = useReducer(reducer, {
         loading: false,
         error: null,
     });
 
-    const login = async (email: string, password: string): Promise<boolean> => {
+    const deletePost = async (id:number): Promise<boolean> => {
         try {
-
             dispatch({ type: SET_LOADING, payload: true });
             dispatch({ type: SET_ERROR, payload: null });
-
-            const result = await signIn('credentials', {
-                email,
-                password,
-                redirect: false,
-            });
-
+            await deletePostService(id);
             dispatch({ type: SET_LOADING, payload: false });
-
-            if (!result?.error) {
-                router.replace('/');
-                return true;
-            } else {
-                dispatch({ type: SET_ERROR, payload: 'Login Failed' });
-                return false;
-            }
-        
+            router.replace(`/profile`);
+            return true;
         } catch (error) {
-            dispatch({ type: SET_ERROR, payload: 'Login Failed' });
-            console.error('Error:', error);
+            dispatch({ type: SET_ERROR, payload: (error as { message: string }).message || 'Failed' });
             return false;
         }
     };
 
-    return { ...state, login };
+    return { ...state, deletePost };
 };

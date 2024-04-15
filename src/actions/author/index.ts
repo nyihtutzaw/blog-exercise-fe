@@ -1,10 +1,11 @@
 
 
+import { apiClient } from "@/lib/apiClient";
 import { User } from "@/types";
 
 export async function getAuthors(): Promise<User[]> {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}users`, { cache: 'no-store' });
+    const res = await apiClient(`users`, { cache: 'no-store' });
     if (!res.ok) {
         throw new Error(`API request failed with status ${res.status}`);
     }
@@ -13,8 +14,7 @@ export async function getAuthors(): Promise<User[]> {
 }
 
 export async function getAuthor(id: number): Promise<User> {
-    const url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}users/${id}`;
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await apiClient(`users/find/${id}`, { cache: 'no-store' });
     if (!res.ok) {
         throw new Error(`API request failed with status ${res.status}`);
     }

@@ -2,9 +2,10 @@ import { getPost } from "@/actions";
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
 import dayjs from 'dayjs';
-import { HtmlRenderer } from "@/components";
 import Link from 'next/link'
-
+import { HtmlRenderer } from "@/components/HtmlRenderer";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 type Prop = {
     params: { id: string }
@@ -17,6 +18,8 @@ export async function generateMetadata(
     const { id } = params;
 
     const post = await getPost(parseInt(id as string));
+
+    if (!post) redirect("/404")
 
     return {
         title: post.title,
@@ -31,9 +34,10 @@ export default async function PostDetail({ params }: Prop) {
 
     const post = await getPost(parseInt(id as string));
 
-    
+    const session = await getServerSession(authOptions);
 
-    if (!post) redirect("/404");
+
+
 
     const { title, content, category, user, publishedAt } = post;
 
@@ -47,8 +51,9 @@ export default async function PostDetail({ params }: Prop) {
                         <Link href={`/category/${category.id}`}><span className="font-bold font-primary underline cursor-pointer" >{category.name}</span></Link>
                     </div>
                 </div>
-                <button className="inline-flex items-center px-4 py-2 bg-primary rounded-md text-sm font-medium text-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">Edit</button>
+                {(session?.user?.id || 0) === user.id && <Link href={`/post/${id}/edit`}><button className="inline-flex items-center px-4 py-2 bg-primary rounded-md text-sm font-medium text-white ">Edit</button></Link>}
             </div>
+
 
             <div className="flex justify-between flex-col md:flex-row">
                 <div className="flex items-center my-4 text-gray-600">

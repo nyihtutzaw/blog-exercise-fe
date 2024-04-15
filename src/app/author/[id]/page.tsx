@@ -1,9 +1,8 @@
 
 import { getAuthor } from "@/actions"
-import { PostItem } from "@/components"
+import { PostItem } from "@/components/PostItem"
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-
 
 
 type Prop = {
@@ -28,6 +27,9 @@ export default async function AuthorDetail({ params }: Prop) {
 
     const { id } = params;
 
+
+
+
     const author = await getAuthor(parseInt(id as string));
 
     if (!author) redirect("/404");
@@ -47,7 +49,7 @@ export default async function AuthorDetail({ params }: Prop) {
             <div className="grid gap-4 grid-cols-1  md:grid-cols-2">
                 {
                     posts.map((post) => (
-                        <PostItem post={post} key={post.id} />
+                        <PostItem post={post} key={post.id}  />
                     ))
                 }
             </div>

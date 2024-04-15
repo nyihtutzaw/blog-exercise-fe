@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Category } from '@/types';
 import { useParams, usePathname } from 'next/navigation';
+import { useSession, signOut } from "next-auth/react"
 
 interface SidebarProps {
     isOpen: boolean;
@@ -13,11 +14,13 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories, toggleSidebar }) => {
-    const pathname=usePathname();
-    const { id='0' }=useParams();
-    const isActive=useCallback((categoryId:number)=>{
-        return pathname.includes("/category") && parseInt(id as string)===categoryId;
-    },[id, pathname])
+    const pathname = usePathname();
+    const { id = '0' } = useParams();
+    const isActive = useCallback((categoryId: number) => {
+        return pathname.includes("/category") && parseInt(id as string) === categoryId;
+    }, [id, pathname])
+
+    const { data: session } = useSession()
 
     return (
         <div
@@ -47,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories, toggleSide
                 <ul className="bg-white  overflow-y-auto py-2">
                     {
                         categories.slice(0, 10).map((category) => (
-                            <Link href={`/category/${category.id}`} key={category.id}><li className={`px-4 ${isActive(category.id)?'bg-primary text-white':'bg-white text-black'} hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer`}>
+                            <Link href={`/category/${category.id}`} key={category.id}><li className={`px-4 ${isActive(category.id) ? 'bg-primary text-white' : 'bg-white text-black'} hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer`}>
                                 {category.name}
                                 <span className="inline-flex items-center px-2 py-1 bg-primary hover:bg-white text-white rounded-full text-xs font-bold">
                                     {category._count?.posts}
@@ -63,9 +66,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories, toggleSide
                     <h3>Account</h3>
                 </div>
                 <ul className="bg-white  overflow-y-auto py-2">
-                    <Link href='/register'><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
-                        Register / Login
-                    </li></Link>
+                    {
+                        session?.user ? <>
+                            <Link href={`/profile`}><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                                Profile
+                            </li></Link>
+                            <li onClick={() => {
+                                signOut({ redirect: false })
+                            }} className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                                Logout
+                            </li>
+                        </> : <>
+                            <Link href='/login'><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                                Register / Login
+                            </li></Link>
+                        </>
+                    }
+
                 </ul>
             </div>
 
