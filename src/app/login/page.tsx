@@ -3,11 +3,9 @@ import React, { useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormItem } from '@/components/FormItem';
 import Image from 'next/image';
-import { ErrorContainer } from '@/components/ErrorContainer';
 import { LoginFormData } from '@/types';
-import { Button, TextBox } from '@/components';
+import { Button, TextBox, ErrorContainer, FormItem } from '@/components';
 import { useLogin } from './useLogin';
 import Link from 'next/link';
 
@@ -20,7 +18,7 @@ const schema = object().shape({
 
 export default function LoginPage() {
 
-    const { error, login,loading } = useLogin();
+    const { error, login, loading } = useLogin();
     const { handleSubmit, control, formState: { errors } } = useForm<LoginFormData>({
         resolver: yupResolver(schema),
     });
@@ -46,6 +44,7 @@ export default function LoginPage() {
                     <FormItem label="Email" className="mb-4">
                         <Controller
                             name="email"
+                            defaultValue="" 
                             control={control}
                             render={({ field }) => (
                                 <TextBox
@@ -61,6 +60,7 @@ export default function LoginPage() {
                     <FormItem label="Password" className="mb-4">
                         <Controller
                             name="password"
+                            defaultValue="" 
                             control={control}
                             render={({ field }) => (
                                 <TextBox

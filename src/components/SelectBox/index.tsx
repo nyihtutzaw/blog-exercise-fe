@@ -16,7 +16,7 @@ type Props = {
     placeholder?: string;
 };
 
-function SelectBox({
+export const  SelectBox=({
     control,
     options,
     name,
@@ -26,7 +26,7 @@ function SelectBox({
     onValueChange,
     isClearable = true,
     placeholder = "Select",
-}: Props) {
+}: Props) =>{
     return (
         <Controller
             control={control}
@@ -38,6 +38,7 @@ function SelectBox({
                         isDisabled={disabled}
                         isMulti={multiple}
                         isClearable={isClearable}
+                        instanceId={`select-box-${name}`}
                         options={options}
                         placeholder={placeholder}
 
@@ -54,5 +55,3 @@ function SelectBox({
         />
     );
 }
-
-export default SelectBox;

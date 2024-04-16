@@ -5,29 +5,32 @@ import { getSession } from 'next-auth/react';
 
 
 export async function getPosts(data: PostQuery): Promise<GetPostsResponse> {
-
-    let url = `posts`;
-
-    if (data.categoryId) {
-        url += `?categoryId=${data.categoryId}`;
-    }
-
-    if (data.page) {
-        if (!data.categoryId)
-            url += `?page=${data.page}`;
-        else url += `&page=${data.page}`;
-    }
-
+    const url = buildUrl('posts', data);
+  
     const res = await apiClient(url, { cache: 'no-store' });
     if (!res.ok) {
-        throw new Error(`API request failed with status ${res.status}`);
+      throw new Error(`API request failed with status ${res.status}`);
     }
+  
     const responseJson = await res.json();
-
-
-
     return responseJson.data;
-}
+  }
+  
+  function buildUrl(baseUrl: string, data: PostQuery): string {
+    const queryParams: string[] = [];
+  
+    if (data.categoryId) {
+      queryParams.push(`categoryId=${data.categoryId}`);
+    }
+  
+    if (data.page) {
+      queryParams.push(`page=${data.page}`);
+    }
+  
+    const queryString = queryParams.join('&');
+  
+    return baseUrl + (queryString ? `?${queryString}` : '');
+  }
 
 
 export async function getPost(id: number): Promise<Post> {
@@ -49,7 +52,7 @@ export async function createPost(data: PostFormData): Promise<Response> {
     }
 
 
-    const res = await fetch(url, {
+    const res = await apiClient(url, {
         method: "POST", body: JSON.stringify(data), headers
     });
 
@@ -73,7 +76,7 @@ export async function editPost(data: PostFormData, id: number): Promise<Response
     }
 
 
-    const res = await fetch(url, {
+    const res = await apiClient(url, {
         method: "PUT", body: JSON.stringify(data), headers
     });
 
@@ -94,7 +97,7 @@ export async function deletePost(id: number): Promise<Response> {
         headers.Authorization = `Bearer ${session?.user?.token}`;
     }
 
-    const res = await fetch(url, {
+    const res = await apiClient(url, {
         method: "DELETE", headers
     });
 

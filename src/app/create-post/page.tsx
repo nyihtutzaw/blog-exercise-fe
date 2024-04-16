@@ -11,7 +11,7 @@ export default async function CreatePostPage() {
 
     return (
         <ProtectedPage>
-            <div className="min-h-screen flex items-start justify-center">
+            <div className="flex items-start justify-center">
                 <PostInputForm categories={categories} />
             </div>
         </ProtectedPage>
