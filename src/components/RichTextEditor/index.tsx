@@ -1,8 +1,10 @@
-import React from 'react';
-import ReactQuill from "react-quill";
+'use client';
+
+import React, { useMemo } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { FC } from "react";
 import { ErrorContainer } from '../ErrorContainer';
+import dynamic from 'next/dynamic';
 
 type Prop = {
   value: string | null;
@@ -17,9 +19,11 @@ export const RichTextEditor: FC<Prop> = ({ value: initValue,errorMessage, height
     onChange(value);
   };
 
+  const ReactQuillMemo = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
+
   return (
     <>
-      <ReactQuill
+      <ReactQuillMemo
         style={{
           height: height,
         }}

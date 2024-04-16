@@ -3,10 +3,9 @@ import React, { useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormItem } from '@/components/FormItem';
 import Image from 'next/image';
 import { RegisterFormData } from '@/types';
-import { Button, ErrorContainer, TextBox } from '@/components';
+import { Button, ErrorContainer, TextBox,FormItem } from '@/components';
 import Link from 'next/link';
 import { useRegister } from './useRegister';
 
