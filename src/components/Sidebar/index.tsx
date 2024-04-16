@@ -47,7 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories, toggleSide
                 <div className='border-b border-black-100 pb-2'>
                     <h3>Category</h3>
                 </div>
-                <ul className="bg-white  overflow-y-auto py-2">
+                <ul className="bg-white  overflow-y-auto py-1">
                     {
                         categories.slice(0, 10).map((category) => (
                             <Link href={`/category/${category.id}`} key={category.id}><li className={`px-4 ${isActive(category.id) ? 'bg-primary text-white' : 'bg-white text-black'} hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer`}>
@@ -61,23 +61,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, categories, toggleSide
 
                 </ul>
             </div>
-            <div className='py-4 px-2'>
+            <div className='py-2 px-2'>
                 <div className='border-b border-black-100 pb-2'>
                     <h3>Account</h3>
                 </div>
                 <ul className="bg-white  overflow-y-auto py-2">
                     {
                         session?.user ? <>
-                            <Link href={`/profile`}><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                            <Link href={`/profile`}><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-1 justify-between cursor-pointer">
                                 Profile
                             </li></Link>
                             <li onClick={() => {
                                 signOut({ redirect: false })
-                            }} className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                            }} className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-1 justify-between cursor-pointer">
                                 Logout
                             </li>
                         </> : <>
-                            <Link href='/login'><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-2 justify-between cursor-pointer">
+                            <Link href='/login'><li className="px-4 text-black hover:bg-primary hover:text-white font-medium text-lg flex items-center py-1 justify-between cursor-pointer">
                                 Register / Login
                             </li></Link>
                         </>
